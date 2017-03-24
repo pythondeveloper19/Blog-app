@@ -1,0 +1,27 @@
+development:
+  host: localhost
+  adapter: postgresql
+  encoding: unicode
+  database: myblog
+  pool: 5
+  timeout: 5000
+  username: blogger
+  password: root
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: myblog
+  pool: 5
+  timeout: 5000
+  username: blogger
+  password: root
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: myblog
+  pool: 5
+  timeout: 5000
+  username: blogger
+  password: root

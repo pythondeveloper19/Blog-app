@@ -1,0 +1,16 @@
+#comment_list
+  = render :partial =>'/posts/comments_partial',:locals => {:post_id => post_id, :comments => comments}
+.media
+  %a.pull-left
+    - if !current_user.photos.blank?
+      = image_tag serve_post_path(current_user.photos.first),:style=>"height:45px;width:45px;"
+    - elsif !current_user.image.blank?
+      = image_tag current_user.image ,:style=>"height:45px;width:45px;"
+    - else
+      = image_tag "/assets/default_avtar.jpeg" ,:style=>"height:45px;width:45px;"
+  .media-body
+    = text_area_tag :editor, "", :class => "form-control post_comment", :rows => 1, :id => "" ,:placeholder=>'Write Your Views'
+:javascript
+  if($('#comment_scroll')[0] != undefined){
+    $('#comment_scroll').scrollTop($('#comment_scroll')[0].scrollHeight);
+  }

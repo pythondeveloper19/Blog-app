@@ -1,0 +1,82 @@
+-if comments.present?
+  -if @post.comments.size > comments.size
+    %div{:style=>"text-align:center;background:lightgrey;border-radius:10px;"}
+      %a{:href=>"javascript:void(0);", :id=>"view_previous",:style=>"text-decoration:none;"}
+        %div.dropup
+          View Previous
+          %span.caret
+  - comments.each do |comment|
+    %div.comment_row
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button",:style=>"margin-right:15px;",:title=>"hide comment"} &times;
+      %div{:class =>"media", :id=>"media_#{comment.id}"} 
+        %a.pull-left
+          - if !comment.user.photos.blank?
+            = image_tag serve_post_path(comment.user.photos.first),:style=>"height:40px;width:40px;"
+          - elsif !comment.user.image.blank?
+            = image_tag comment.user.image ,:style=>"height:40px;width:40px;"
+          - else
+            = image_tag "/assets/default_avtar.jpeg" ,:style=>"height:40px;width:40px;"
+        .media-body
+          %h5.media-heading= !comment.user.name.nil? ? comment.user.name : comment.user.email.split('@')[0].titleize
+          %span{id: "comment_#{comment.id}"}
+            = smileys(comment.body) rescue nil
+          %h5.media-heading{:style=>"margin-top:6px;"}
+            .small.some{:style=>"color:grey;"}
+              = display_event_time(comment)
+              -if (user_signed_in? && (current_user.id == comment.user.id) || (current_user.user_type == "admin" ))
+                %a{:style =>"margin-left:5px;text-decoration:none;",:'data-comment_id'=>"#{comment.id}" ,:class=>"edit_comment",:'data-refresh'=>"false",:href=>"javascript:void(0);"}
+                  Edit
+                %a{:style =>"margin-left:5px;text-decoration:none;",:'data-comment_id'=>"#{comment.id}",:class=>"delete_comment",:href=>"javascript:void(0);"}
+                  Delete
+      %div{:style => "border-bottom:1px solid lightgrey;margin-top:5px;"}      
+- else
+  .alert.alert-warning
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button",:style=>"margin-right:15px;"} &times;
+    There is no comments to display
+:javascript
+  var comment_id = '';
+  var comment = '';
+  $(".edit_comment").on('click',function(){ 
+    is_refresh = false;
+    comment_id = $(this).attr('data-comment_id');
+    comment = $("#comment_"+comment_id).text().trim();
+    var textarea_edit = '<div><textarea class="form-control" rows="1" id="edited_comment">' + comment + '</textarea></div><div class="pull-right" style="margin-top:6px;"><a href="javascript:void(0);"class ="label label-primary" id="save_comment" onclick="save_comment();">Save</a>&nbsp;<a href="javascript:void(0);" class ="label label-default" id="cancel_comment" onclick = "cancel_comment();">Cancel</a></div>';
+    $("#comment_"+comment_id).html(textarea_edit);
+  });
+
+  var save_comment = function(){
+    var new_comment = $("#edited_comment").val().trim();
+    $.ajax({
+      url : "/posts/"+comment_id+"/edit_and_delete_comment",
+      method: 'get',
+      data: {'comment' : new_comment ,'from_edit' : true}
+    }).success(function(){
+        is_refresh = true;
+      });
+  }
+    
+  var cancel_comment = function(){
+    $("#comment_"+comment_id).html(comment);
+    is_refresh = true;
+  }
+
+  $(".delete_comment").on('click',function(){
+    is_refresh = false;
+    var comment_id = $(this).attr('data-comment_id');
+    if(confirm("Are you sure?")){
+      $.ajax({
+        url : "/posts/"+comment_id+"/edit_and_delete_comment",
+        method : 'get',
+        data :{'from_delete' : true}
+      }).success(function(){
+          $("#media_"+comment_id).hide();
+            is_refresh = true;
+        });
+    }
+    is_refresh = true;
+  });
+    
+
+
+  
+  

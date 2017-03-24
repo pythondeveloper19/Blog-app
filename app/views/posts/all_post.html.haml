@@ -1,0 +1,51 @@
+.row
+  .col-md-11.panel{:style=>"margin-left:45px;"}
+    .page-header.sticky-wrapper
+      %h1
+        Blog Listing
+        %small{:style=>"color:#{(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color};"}
+          Total
+          %span.badge= @posts.size
+        %span{:class=>"pull-right"}
+          - if (user_signed_in? && (["admin","blogger"].include?(current_user.user_type)))
+            %a{:href=>"javascript:void(0);",:title=>"Grid View",:style=>"text-decoration:none;",:id=>"list_grid_view","data-view"=>"grid"}
+              = image_tag '/assets/grid_view_black.png',:style=>"height:37px;"
+            %a{:href=>new_post_path,:title=>"New Post",:style=>"text-decoration:none;"}
+              = image_tag '/assets/new_post.png',:style=>"height:50px;"
+            %a{:href=>posts_path,:title=>"Home"}
+              = image_tag '/assets/back_home.png',:style=>"width:45px;"
+        %br
+          =will_paginate @posts, renderer: BootstrapPagination::Rails
+    #all_post_div
+      = render :partial =>'/posts/list_view_post'
+:javascript
+  $(document).ready(function(){
+    $('.pagination').addClass('pagination-sm pull-right');
+    $('.pagination').css("margin-right","-166px");
+  });
+  if (#{!current_user.bg_color.blank?}){
+    $('body').css("background",'#{current_user.bg_color}');
+  }
+  $('#list_grid_view').click(function(){
+    var view = $(this).attr('data-view');
+    var page = $('.pagination .active span').text();
+    if (page == ""){
+      page = 1;
+    }
+    if (view == "grid"){
+      $('#list_grid_view img').attr('src','/assets/list_view_black.png');
+      $(this).attr('data-view','list');
+      $(this).attr('title','List View');
+      $('#list_grid_view img').css('height','40px');
+    }else{
+      $('#list_grid_view img').attr('src','/assets/grid_view_black.png');
+      $(this).attr('data-view','grid');
+      $(this).attr('title','Grid View');
+      $('#list_grid_view img').css('height','37px');
+    }
+    $.ajax({
+        url : '/posts/1/list_grid_view',
+        method : 'get',
+        data :{'view' : view,'page' : page}
+      })
+  });

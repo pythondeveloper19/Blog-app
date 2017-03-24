@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="box col-md-3" style="height:546px;">
+    <div class="page-header" style="border-bottom: 1px solid #999999 !important">
+      <h2>Sign in <small></small></h2>
+    </div>
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :role => "form") do |f| %>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <%= f.email_field :email, :autofocus => true, :style =>"height:34px;" ,:class => "form-control" ,:placeholder => "Enter email"%>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <%= f.password_field :password , :style =>"height:34px;", :class => "form-control" ,:placeholder => "Password"%>
+      </div>
+      <% if devise_mapping.rememberable? -%>
+        <div class="checkbox"><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+      <% end -%>
+      <div><%= f.submit "Sign in" ,:class=>"btn btn-default"%></div>
+    <% end %>
+    <div style="margin-bottom:10px;color:grey;"><div style="border-top:1px solid;width:45%;margin-top:8px;margin-right:3px;" class="pull-left"></div>OR<div class="pull-right" style="border-top:1px solid;width:45%;margin-top:8px;"></div></div>
+    <div style="text-align:center;">
+      <%- if devise_mapping.omniauthable? %>
+        <%- resource_class.omniauth_providers.each do |provider| %>
+          <a href="<%=omniauth_authorize_path(resource_name, provider)%>" style="text-decoration:none;">
+            <%if provider == :google_oauth2 %>
+              <%= image_tag "/assets/google-plus-icon.png",:style =>"height:40px;width:40px;"%>
+            <%elsif provider == :facebook%>
+               <%= image_tag "/assets/facebook.jpeg",:style =>"height:40px;width:40px;margin-left:20px;"%>
+            <%end%>
+          </a>
+        <% end -%>
+      <% end -%>
+    </div>
+    <br />
+    <%= render "devise/shared/links" %>
+  </div>
+  <%=render :partial => "devise/sessions/slider"%>
+</div>

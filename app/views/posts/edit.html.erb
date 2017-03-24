@@ -1,0 +1,19 @@
+<div class="panel col-md-11" style="margin-left:45px;">
+  <h1>Editing Blog <small><%=@post.updated_at.strftime("%d %B %Y")%></small>
+    <span class="pull-right" style="margin-right:10px;"><a href="/posts/<%=@post.id%>" title="Show Post"><%=image_tag '/assets/show_post.png',:style=>"height:55px;margin-right:10px;"%></a><a href="<%=root_path%>" title="Home"><%= image_tag '/assets/back_home.png',:style=>"height:50px;"%></a></span>
+  </h1>
+  <br/>
+  <div style ="border-bottom:1px solid grey;"></div><br/>
+  <%= render 'form' %>
+</div>
+<script>
+  <%if !current_user.bg_color.blank?%>
+    $('body').css("background",'<%=current_user.bg_color%>');
+  <%end%>
+</script> 
+<!--<table class="table table-striped table-hover table-bordered">
+  <tr>
+    <td style="text-align:center;"></td>
+    <td style="text-align:center;"></td>
+  </td>
+</table>-->

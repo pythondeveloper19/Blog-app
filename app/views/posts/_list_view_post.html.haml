@@ -1,0 +1,37 @@
+//=will_paginate @posts, renderer: BootstrapPagination::Rails
+%table.table.table-striped.table-hover
+  - @posts.each_with_index do |post,index|
+    %tr
+      %td.row
+        .media
+          .pull-left
+            - if !post.user.photos.blank?
+              = image_tag serve_post_path(post.user.photos.first),:style=>"height:60px;width:60px;"
+            - elsif !post.user.image.blank?
+              = image_tag post.user.image ,:style=>"height:60px;width:60px;"
+            - else
+              = image_tag "/assets/default_avtar.jpeg" ,:style=>"height:60px;width:60px;"
+          .media-body
+            .grid_view
+              .title.pull-right{:style=>"color:#{(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color};"}
+                = !post.title.nil? ? post.title.upcase : ''
+              - if !post.photos.blank?
+                = image_tag serve_post_path(post.photos.first),:style=>"display:none;"
+            %h4.media-heading
+              = !post.user.name.nil? ? post.user.name : post.user.email.split('@')[0].titleize
+              %small{:style=>"color:#{(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color};"}
+                Comments
+                %span.primary.badge= post.comments.size
+            = post.text.html_safe rescue nil
+            %h4.media-heading
+              .small.pull-right{:style=>"color:grey;margin-top:6px;"}
+                = display_event_time(post)
+                \&nbsp;&nbsp;                    
+                %a{:href=>"#{root_path}?post_id=#{post.id}",:title=>"Comment",:style=>"text-decoration:none;"}
+                  = image_tag '/assets/comment_post.png',:style=>"height:32px;"
+                \&nbsp;
+                - if (user_signed_in? && ((current_user.user_type == "admin") || (current_user.id == post.user_id)))
+                  %a{:href=>edit_post_path(post),:title=>"Edit Post",:style=>"text-decoration:none;"}
+                    = image_tag '/assets/edit_post.png',:style=>"height:35px;"
+                  \&nbsp;
+                  %a{"data-confirm" => "Are you sure?", "data-method" => "delete", :href => "/posts/#{post.id}?from_page=all_post&view=list", :title => "Delete Post"}= image_tag "/assets/delete_post.png",:style=>"height:30px;"

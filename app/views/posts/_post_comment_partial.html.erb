@@ -1,0 +1,63 @@
+<%if !post.blank?%>
+          <%#posts.each do |post|%>
+            <div class="panel-body" id="post_comment_div" style="background:white;" value="<%=post.id%>">
+              <div class="media">
+                <a class="pull-left" href="">
+                  <%if !post.user.photos.blank?%>
+                   <%= image_tag serve_post_path(post.user.photos.first),:style=>"height:80px;width:80px;" %>
+                  <%elsif !post.user.image.blank?%>
+                    <%= image_tag post.user.image ,:style=>"height:80px;width:80px;"%>
+                  <%else%>
+                    <%= image_tag "/assets/default_avtar.jpeg" ,:style=>"height:80px;width:80px;"%>
+                  <%end%>
+                </a>
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    <div class="pull-right">
+                      <%if (user_signed_in? && (["admin","blogger"].include?(current_user.user_type)))%>
+                        <a href="<%=new_post_path%>" title="New Post"><%=image_tag "/assets/new_post.png",:style=>"height:40px;margin-right:5px;"%></a>
+                      <%end%>
+                      <%if !@post.blank?%>
+                        <%if (user_signed_in? && ((current_user.user_type == "admin") || (current_user.id == @post.user_id))) %>
+                         <a href="<%=edit_post_path(@post)%>" title="Edit Post"><%=image_tag "/assets/edit_post.png",:style=>"height:35px;"%></a>
+                          <a href="/posts/<%=@post.id%>?from_page=home" data-confirm="Are you sure?" data-method="delete" title="Delete Post"><%=image_tag "/assets/recycle_bin.png",:style=>"height:33px;" %></a>
+                        <%end%>
+                      <%end%>
+                    </div>
+                    <%=!post.user.name.blank?  ? post.user.name : post.user.email.split('@')[0] %><br/><small><%=display_event_time(@post)%></small><br/><h5><b style="color:<%=(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color%>;"> <%=post.title%></b> 
+                  </h5></h4>
+                  <div style ="border-bottom:1px solid lightgrey;margin-top:-3px;"></div><br/>
+                  <%if !post.photos.blank?%>
+                    <%=image_tag serve_post_path(post.photos.first),:style=>"height:300px;" %><br/><br/>
+                    <small style="color:gray"><%=post.photos.first.description%></small>
+                    <div style ="border-bottom:1px solid lightgrey;margin-top:12px;"></div>
+                  <%end%> 
+                  <%= post.text.html_safe rescue nil%><br/>
+                  <h5 class="media-heading" style="margin-top:6px;">
+                    <small style="color:grey;">
+                      <%=display_event_time(post)%>
+                      &nbsp;&nbsp;
+                      <a id='like_div' href="javascript:void(0);" style="text-decoration:none"><%=!@is_liked.blank? ? 'Unlike' : 'Like'%></a>
+                      <span class="badge" id="like_count"><%=post.likes.size%></span>
+                      &nbsp;
+                      <span style="color:<%=(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color%>">Comments</span><span class="badge" id="comment_size"><%=post.comments.size%></span> 
+                    </small>
+                  </h5> 
+                  <div class="panel-body">
+                    <div id = "comment">
+                      <%= render :partial => 'posts/comment', :locals => {:post_id => post.id, :comments => comments} %>
+                    </div>
+                  </div> 
+                </div>
+              </div>
+              <br />
+            </div>
+          <%#end%>  
+        <%else%>
+          <h1>No post Available</h1>
+        <%end%>
+        <br/>
+<script>
+  /**/
+
+</script>

@@ -1,0 +1,60 @@
+.collapse.navbar-collapse
+  %ul.nav.navbar-nav
+    %li= link_to "Blogger Live", root_path ,:class=>"brand"
+  - if user_signed_in? && params[:controller]=="posts"
+    %form.navbar-form.navbar-left{:role => "search",:action=>"/posts/1/search_post",:style=>"margin-top:2px;"}
+      .form-group
+        %input.form-control{:placeholder => "Search Post By Title", :type => "text",:style=>"height:34px;width:300px;",:name=>"content"}
+      %button{:type => "submit",:class=>"btn btn-primary"}=image_tag "/assets/google_web_search.png",:style=>"height:20px;"
+  %ul.nav.pull-right{:id=>"login_div"}
+    %li.dropdown
+      %a.dropdown-toggle{"data-toggle" => "dropdown"}
+        = current_user.present? ? current_user.name.titleize : 'Sign in'
+        %span.caret.some{:style =>"margin-bottom:7px;"}
+        - if !current_user.blank? && !current_user.photos.blank?
+          = image_tag serve_post_path(current_user.photos.first),:style=>"height:30px;width:30px;",:class=>"img-circle"
+        - elsif !current_user.blank? && !current_user.image.blank?
+          = image_tag current_user.image ,:style=>"height:30px;width:30px;",:class=>"img-circle"
+        - else
+          = image_tag "/assets/default_avtar.jpeg" ,:style=>"height:30px;width:30px;",:class=>"img-circle"
+      %ul.dropdown-menu
+        - if user_signed_in?
+          %li{:role => "presentation"}
+            = link_to('Logout', destroy_user_session_path, :method=>'delete',:role=>"menuitem",:tabindex=>"-1")
+        - else
+          %li{:role => "presentation"}
+            = link_to('Login', new_user_session_path,:role=>"menuitem",:tabindex=>"-1")
+        %div{:style => "border-bottom:1px solid lightgrey;margin-top:5px;"}
+        - if user_signed_in?
+          %li{:role => "presentation"}
+            = link_to('Edit account', edit_user_registration_path,:role=>"menuitem",:tabindex=>"-1")
+        - else
+          %li{:role => "presentation"}
+            = link_to('Sign up', new_user_registration_path,:role=>"menuitem",:tabindex=>"-1")
+  - if user_signed_in? && false
+    %ul.nav.pull-right.nav-pills.nav-stacked{:id=>'delete_notification1',:style=>"margin-top:5px;"}
+      %li.dropdown
+        %a.dropdown-toggle{"data-toggle" => "dropdown"}
+          - if !@redis_notifications_unread.blank? && @redis_notifications_unread.size > 0
+            %span.badge.pull-right{:id=>'notification_badge',:style=>"background-color:red;"}
+              =@redis_notifications_unread.size
+          = image_tag "/assets/notification.png"
+        %ul.dropdown-menu
+          -if !@redis_notifications.blank?
+            - @redis_notifications.compact.each do |notification|
+              =notification.html_safe
+              %div{:style => "border-bottom:1px solid lightgrey;margin-top:5px;"}
+          -else
+            %li{:role => "presentation"}
+              = link_to "No Notification yet", root_path
+                
+:javascript
+  $('#delete_notification').click(function(){
+    $('#notification_badge').attr('style','background-color:grey');
+    $('#notification_badge').text('0');
+    $.ajax({
+      url : '/posts/mark_read_to_notification',
+      method: 'post'
+    });
+  });
+  

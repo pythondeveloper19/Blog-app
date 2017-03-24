@@ -1,0 +1,17 @@
+<div class="panel col-md-11" style="margin-left:45px;">
+  <h1>New Blog <small><%=Date.today.strftime("%d %B %Y")%></small><a class="pull-right" href="<%=posts_path%>" title="Home"><%=image_tag '/assets/back_home.png',:style=>"height:50px;margin-right:10px;"%></a></h1>
+  <br/>
+  <div style ="border-bottom:1px solid grey;"></div><br/>
+  <%= render 'form' %>
+</div>
+
+<script>
+  <%if !current_user.bg_color.blank?%>
+    $('body').css("background",'<%=current_user.bg_color%>');
+  <%end%>
+</script> 
+<!--<table class="table table-striped table-hover table-bordered">
+  <tr>
+    <td style="text-align:center;"></td>
+  </tr>
+<table>-->

@@ -1,0 +1,88 @@
+<%#= render :partial => 'posts/show_post_comments', :locals => {:post => @post,:comments => @comments,:from=>"index"} %>
+<div class="col-md-12">
+  <div class="row">
+    <div id="show_post_comment_div" class="col-md-8" style="margin-left:70px;">
+      <%=render :partial=>"/posts/post_comment_partial",:locals=>{:post=>@post,:comments => @comments}%>
+    </div>
+    <%= render :partial => 'posts/all_post_partial'%>
+  </div>
+</div>
+
+<script> 
+  $(document).on('keypress','.post_comment',function(e){
+    if (e.which == 13){
+      var comment = $(this).val();
+      var post_id = $('#post_comment_div').attr('value');
+      var no_click = parseInt(click_number) - 1;
+      $.ajax({
+        url : "/posts/"+post_id+"/save_comment",
+        method: 'get',
+        data: {'comment' : comment,'no_click':no_click}
+      });
+    }
+  });
+  $(document).on('click', '#view_previous',function(){
+    var no_click = click_number;
+    var post_id = $('#post_comment_div').attr('value');
+    $.ajax({
+      url : "/posts/"+post_id+"/refresh_comments",
+      method: 'get',
+      data: {'no_click' : no_click},
+      success: function(){
+                 click_number = parseInt(no_click) + 1 ;
+               }  
+    });
+  });
+  $(document).on('click','#like_div',function(){
+    var like_unlike =  $(this).text();
+    var post_id = $('#post_comment_div').attr('value');
+    if ( like_unlike == 'Like'){
+      $('#like_count').text(parseInt($('#like_count').text()) + 1);
+      $(this).text('Unlike');
+    }else{
+      $('#like_count').text(parseInt($('#like_count').text()) - 1);
+      $(this).text('Like');
+     }
+    $.ajax({
+      url : "/posts/"+post_id+"/like_unlike_post_and_comment",
+      method: 'post',
+      data: {'like_unlike' : like_unlike}
+    });
+  });
+  $(".post_div a").on('click',function(){
+    var post_id = $(this).attr('value');
+    $.ajax({
+      url : "/posts/"+post_id+"/show_post_and_comment",
+      method : 'get',
+      data :{'post_id' : post_id},
+      success: function(){
+                 click_number = 2;
+                 $('.post_div').each(function(){
+                    $(this).css('border-left','');
+                  });
+                 $('#post_div_'+post_id).css('border-left','solid <%=(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color%>');
+               }  
+    })
+  });
+
+  <%if !current_user.bg_color.blank?%>
+    $('body').css("background",'<%=current_user.bg_color%>');
+  <%end%>
+  
+  setInterval(
+    function(){
+      if($('#delete_notification li').hasClass('open') || $('#login_div li').hasClass('open')){
+        is_refresh = false;
+      }
+      if(is_refresh == true){
+        var no_click = parseInt(click_number) - 1;
+        var post_id = $('#post_comment_div').attr('value');
+        $.ajax({
+          url : '/posts/'+post_id+'/refresh_comments',
+          method: 'get',
+          data: {'no_click' : no_click}
+        });
+      }
+    },5000
+  );        
+</script>

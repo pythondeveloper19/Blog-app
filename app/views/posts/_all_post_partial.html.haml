@@ -1,0 +1,39 @@
+.col-md-3
+  .row.recent_blog.affix.box{:style=>"width:349px;margin-left:25px;"}
+    .page-header{:style=>"margin-bottom:5px;margin-top:10px;"}
+      %h4
+        %a{:href=>post_all_post_path(@post),:title=>"See All Post",:style=>"color:gray;text-decoration:none;" ,:class=>"pull-right"}
+          = image_tag '/assets/all_feeds.png',:style=>"height:30px;"
+        %b
+          Recent Blogs
+    - @posts.each_with_index do |post,index|
+      .post_div{:id=>"post_div_#{post.id}"}
+        %a.media{:href=>"javascript:void(0);",:style=>"text-decoration:none;color:black;",:value=>post.id}
+          .pull-left
+            - if !post.user.photos.blank?
+              = image_tag serve_post_path(post.user.photos.first),:style=>"height:40px;width:40px;"
+            - elsif !post.user.image.blank?
+              = image_tag post.user.image ,:style=>"height:40px;width:40px;"
+            - else
+              = image_tag "/assets/default_avtar.jpeg" ,:style=>"height:40px;width:40px;" 
+          .media-body
+            %h5.media-heading
+              = !post.user.name.nil? ? post.user.name.split(' ')[0].titleize : post.user.email.split('@')[0].titleize
+              %small{:style=>"color:#{(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color};"}
+                comments
+                %span.badge
+                  =post.comments.size
+              %br
+              %div{:style=>"margin-top:6px;"}
+                %small{:style=>"color:blue;"}
+                  = post.title.truncate(30)
+                %b.pull-right{:style=>"color:black;font-size:9px;margin-top:7px;"}
+                  = display_event_time(post)
+            .post-content{:style=>"display:none;"}
+              //= smileys(post.text) rescue nil
+        %hr#1{:style=>"color:lightgrey;margin-bottom:5px;"}
+    -if @post_size > 6
+      %a{:href=>post_all_post_path(@post),:title=>"View More",:style=>"color:gray;text-decoration:none;margin-left:92px;"}
+        = image_tag '/assets/view_more.png',:style=>"height:35px;"
+        View More
+

@@ -1,0 +1,94 @@
+<div class="panel col-md-11" style="margin-left:45px;">
+  <div class="page-header">
+    <h1><span class="pull-right"><a href="<%=root_path%>" title="Home"><%= image_tag '/assets/back_home.png',:style=>"height:50px;"%></a></span>
+      Edit <small><%= resource_name.to_s.humanize %></small>
+    </h1>
+  </div>
+  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put ,:multipart => true}, :role => "form") do |f| %>
+    <%resource.errors.full_messages.each do |error_msg| %>
+       <div class="alert alert-danger"><%= error_msg%><button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="margin-right:15px;">&times;</button></div>
+    <%end%>
+    <div class="row">  
+      <div class="col-md-5">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Full Name</label><br/>
+            <%= f.text_field :name, :autofocus => true, :style =>"height:34px;" ,:class => "form-control" ,:placeholder => "Full Name"%>
+          </div>
+        <div class="form-group">
+          <!--<div><%#= f.label :email %><br />-->
+          <label for="exampleInputEmail1">Email address</label><br/>
+          <%= f.email_field :email, :style =>"height:34px;" ,:class => "form-control" ,:placeholder => "Enter email" %>
+        </div>
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+        <% end %>
+        <div class="form-group">
+          <a id="change_password" style="text-decoration:none;" class="btn btn-success">+ Edit Password</a>
+        </div>
+        <div id ="edit_password_div" style="display:none;">
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label><i>(leave blank if you don't want to change it)</i><br />
+            <%= f.password_field :password, :autocomplete => "off", :style =>"height:34px;", :class => "form-control" ,:placeholder => "Password"%>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password Confirmation</label><br />
+            <%= f.password_field :password_confirmation, :style =>"height:34px;", :class => "form-control" ,:placeholder => "Password"%>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Current Password</label> <i>(we need your current password to confirm your changes)</i><br />
+            <%= f.password_field :current_password, :style =>"height:34px;", :class => "form-control" ,:placeholder => "Password" %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="exampleInputPassword1">Upload Profile Picture</label>
+          <%#= f.file_field :avatar%> 
+          <%if !current_user.photos.blank?%>
+            <%=image_tag serve_post_path(current_user.photos.first),:style=>"height:400px;" %>
+          <%elsif !current_user.image.blank?%>
+            <%= image_tag current_user.image ,:class=>"thumbnail",:style=>"height:400px;"%>
+          <%else%>
+            <%= image_tag "/assets/default_avtar.jpeg",:class=>"thumbnail" ,:style=>"height:400px;"%>
+          <%end%>
+          <div class="field">
+           <label for="exampleInputEmail1">Change Profile Picture</label>
+           <input type="file" name="file" id="photo_file" accept="image/*"><br/>
+           </div>
+        </div>
+   
+        <%#if !current_user.avatar.blank? && !current_user.avatar.url.include?("missing")%>
+          <%#= image_tag current_user.avatar.url,:class=>"thumbnail",:style=>"height:400px;" %>
+        <%#elsif !current_user.image.blank?%>
+          <%#= image_tag current_user.image ,:class=>"thumbnail",:style=>"height:400px;"%>
+        <%#else%>
+          <%#= image_tag "/assets/default_avtar.jpeg",:class=>"thumbnail" ,:style=>"height:400px;"%>
+        <%#end%>
+
+        <div><%= f.submit "Update" ,:class=>"btn btn-primary pull-right"%></div>
+      </div>
+    </div>   
+  <% end %>
+</div>
+<script>
+  <%if !current_user.bg_color.blank?%>
+    $('body').css("background",'<%=current_user.bg_color%>');
+  <%end%>
+  $('#change_password').on('click',function(){
+    if ($(this).text() == '+ Edit Password'){
+      $(this).text('- Edit Password');
+      $('#edit_password_div').css('display','block');
+    }else{
+      $(this).text('+ Edit Password');
+      $('#edit_password_div').css('display','none');
+    }
+  });
+</script>
+<!--
+<h3>Cancel my account</h3>
+<label for="exampleInputPassword1">Unhappy?</label><%#= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete, :class=>"btn btn-default"%>
+<table class="table table-striped table-hover table-bordered">
+  <tr>
+    <td style="text-align:center;"><%#= link_to "Back", :back %></td>
+  </tr>
+</table>-->

@@ -1,0 +1,109 @@
+%html{:xmlns => "http://www.w3.org/1999/xhtml",:lang=>"en"}
+  %head
+    %meta{:charset => "utf-8"}
+      %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}
+        = favicon_link_tag 'favicon.ico'
+        %title= content_for?(:title) ? yield(:title) : "Blogger Live"
+        %meta{:content => "", :name => "description"}
+          %meta{:content => "", :name => "author"}
+            = stylesheet_link_tag "application", :media => "all"
+            = javascript_include_tag "application"
+            = csrf_meta_tags
+            = yield(:head)
+  %body
+    %header.navbar.navbar-fixed-top
+      %nav.navbar.navbar-inverse.navbar-fixed-top{:role => "navigation"}
+        #header_bloggerlive.container
+          = render 'common/session'
+    - if !current_user.blank?
+      %section#style-switcher{:style => "left: -209px;"}
+        %h2
+          BG Switcher
+          %a{:href => "javascript:void(0);"}
+            %i.fa.fa-cog.fa-spin{:style=>"margin-top:6px;"}
+        %div
+          %h3 Colors
+          %ul.colors{:href => "/assets/gray.css"}
+            %li
+              %a.blue{:href => "javascript:void(0);", :title => "Blue"}
+            %li
+              %a.green{:href => "javascript:void(0);", :title => "Green"}
+            %li
+              %a.orange{:href => "javascript:void(0);", :title => "Orange"}
+            %li
+              %a.purple{:href => "javascript:void(0);", :title => "Purple"}
+            %li
+              %a.red{:href => "javascript:void(0);", :title => "Red"}
+            %li
+              %a.magenta{:href => "javascript:void(0);", :title => "Magenta"}
+            %li
+              %a.brown{:href => "javascript:void(0);", :title => "Brown"}
+            %li
+              %a.gray{:href => "javascript:void(0);", :title => "Gray"}
+            %li
+              %a.white{:href => "javascript:void(0);", :title => "White"}
+            %li
+              %a.teal{:href => "javascript:void(0);", :title => "Teal"}
+            %li
+              %a.default{:href => "javascript:void(0);", :title => "Default",:style=>"border:solid 1px;"}
+    #main{:role => "main"}
+      .container
+        %div
+          %div
+            = yield
+          %footer
+      / ! end of .container
+    / ! end of #main
+:javascript
+  var background_default = "url('/assets/bg.jpg') no-repeat fixed center center / cover  rgba(0, 0, 0, 0)";
+  var is_refresh = true;
+  var click_number = 2;
+  $('#comment_list').on('mouseover','.comment_row',function(){
+    $(this).css('margin','0px 5px 7px -5px');
+    $(this).css('box-shadow','5px 5px 3px #CCCCCC');
+    $(this).css('background','lightyellow');  
+  });
+  $('#comment_list').on('mouseout','.comment_row',function(){
+    $(this).css('margin','');
+    $(this).css('box-shadow','0px 0px 0px');
+    $(this).css('background','white');
+  });
+  $('.recent_blog .post_div').on('mouseover',function(){
+    $(this).css('background','#E0E1E7');
+  });
+  $('.recent_blog .post_div').on('mouseout',function(){
+    $(this).css('background','');
+  });
+  
+  jQuery(document).ready(function($) {
+    $("#style-switcher h2 a").click(function(e){
+      e.preventDefault();
+      var div = $("#style-switcher");
+      console.log(div.css("left"));
+      if (div.css("left") === "-209px") {
+        $("#style-switcher").animate({
+          left: "0px"
+        }); 
+      } else {
+        $("#style-switcher").animate({
+          left: "-209px"
+        });
+      }
+    });
+        
+    $('#style-switcher div ul li a').click(function(){
+      var background_color = $(this).attr('class');
+      if (background_color== "default"){
+        background_color = '';
+        $('body').css('background',background_default);
+      }else{
+          $('body').css('background',background_color);
+        }
+       $.ajax({
+        url : "/users/"+#{current_user.blank? ? 0 : current_user.id}+"/set_background",
+        method: 'post',
+        data: {'bg_color' : background_color}
+      })
+    });
+  });
+

@@ -1,0 +1,7 @@
+development: &non_production_settings
+  main_url: http://183.182.84.98:3000
+  site_url: http://183.182.84.98:3000
+  ssl_url: http://183.182.84.98:3000
+  #main_url: http://192.168.1.109:3000
+  #site_url: http://192.168.1.109:3000
+  #ssl_url: http://192.168.1.109:3000

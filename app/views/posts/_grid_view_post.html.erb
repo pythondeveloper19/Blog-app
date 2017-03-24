@@ -1,0 +1,42 @@
+<%#=will_paginate @posts, renderer: BootstrapPagination::Rails%>
+<div class="row">
+  <% @posts.each do |post|%>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <%if !post.photos.blank?%>
+          <%=image_tag serve_post_path(post.photos.first),:style=>"height:200px;"%>
+        <%else%>
+          <img src="/assets/default_post.jpeg" alt="..." style="height:200px;">
+        <%end%>
+        <div class="media">
+          <a class="pull-left" href="">
+            <%if !post.user.avatar.blank? && !post.user.avatar.url.include?("missing")%>
+              <%= image_tag post.user.avatar.url,:style=>"height:50px;width:50px;" %>
+            <%elsif !post.user.image.blank?%>
+              <%= image_tag post.user.image ,:style=>"height:50px;width:50px;"%>
+            <%else%>
+              <%= image_tag "/assets/default_avtar.jpeg" ,:style=>"height:50px;width:50px;"%>
+            <%end%>
+          </a>
+          <div class="media-body">
+            <h5 class="media-heading">
+              <%=!post.user.name.blank?  ? post.user.name.split(' ')[0] : post.user.email.split('@')[0] %><small style="color:<%=(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color%>;">Comments<span class="badge"><%=post.comments.size%></span></small><br/><br/><small><%=display_event_time(post)%></small><br/>
+            </h5>
+            <div style ="border-bottom:1px solid lightgrey;"></div>
+          </div>
+        </div>   
+        <div class="caption">
+          <h4 style="color:<%=(current_user.bg_color.blank? || current_user.bg_color == 'white') ? 'darkred' : current_user.bg_color%>;"><%=post.title.upcase.truncate(20)%></h4>
+          <p>
+            <a href="<%=root_path%>?post_id=<%=post.id%>" class="btn btn-success" title="Read More...">READ</a>
+            <%if (user_signed_in? && ((current_user.user_type == "admin") || (current_user.id == post.user_id))) %>
+             <a href="<%=edit_post_path(post)%>" class="btn btn-primary" title="Edit Post">EDIT</a>
+              <a href="/posts/<%=post.id%>?from_page=all_post&view=grid" class="btn btn-danger" data-confirm="Are you sure?" data-method="delete" title="Delete Post">DELETE</a>
+            <%end%>
+          </p>
+        </div>
+      </div>
+    </div>
+  <%end%>
+</div>
+

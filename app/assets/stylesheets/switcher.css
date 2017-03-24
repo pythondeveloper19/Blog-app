@@ -1,0 +1,157 @@
+
+#style-switcher h3 {
+    color: #888888;
+    font-family: "Open Sans",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px 0 10px 1px;
+}
+#style-switcher {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #fff;
+    border-color: -moz-use-text-color #e4e4e4 #e4e4e4 -moz-use-text-color;
+    border-image: none;
+    border-radius: 0 0 3px;
+    border-right: 1px solid #e4e4e4;
+    border-style: none solid solid none;
+    border-width: 0 1px 1px 0;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.08);
+    left: -206px;
+    outline: medium none;
+    position: fixed;
+    top: 160px;
+    width: 205px;
+    z-index: 99999;
+}
+#style-switcher div {
+    padding: 3px 18px 5px;
+}
+#style-switcher h2 {
+    background-color: #777;
+    color: #fff;
+    font-family: "Open Sans",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 40px;
+    margin: 0;
+    outline: medium none;
+    padding: 0 0 0 20px;
+}
+#style-switcher h2 a {
+    background-color: #555;
+    border-radius: 0 3px 3px 0;
+    color: #fff;
+    display: block;
+    font-size: 26px;
+    height: 40px;
+    outline: medium none;
+    position: absolute;
+    right: -43px;
+    text-align: center;
+    text-decoration: none;
+    top: 0;
+    width: 43px;
+}
+.colors {
+    list-style: none outside none;
+    margin: 0 0 10px;
+    overflow: hidden;
+    padding-left: 0;
+}
+.colors li {
+    float: left;
+    margin: 4px 2px 0;
+}
+.colors li a {
+    border-radius: 1px;
+    cursor: pointer;
+    display: block;
+    height: 29px;
+    width: 29px;
+}
+.layout-style select, .header-style select, .footer-style select, .header-color input {
+    border-radius: 2px;
+    color: #888;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 2px 0 2px 2px;
+    padding: 2px 5px;
+    width: 164px;
+}
+.header-color .sp-replacer {
+    padding: 4px 6px !important;
+}
+.header-color .sp-replacer .sp-dd, .header-color .sp-replacer .sp-preview, div.header-color {
+    padding: 0 1px !important;
+}
+.layout-style, .header-style, .header-color .footer-style {
+    padding: 0 !important;
+}
+.blue {
+    background: none repeat scroll 0 0 #2eaef0;
+}
+.green {
+    background: none repeat scroll 0 0 #82dc23;
+}
+.orange {
+    background: none repeat scroll 0 0 #fa6900;
+}
+.purple {
+    background: none repeat scroll 0 0 #b71db7;
+}
+.red {
+    background: none repeat scroll 0 0 #d12d32;
+}
+.magenta {
+    background: none repeat scroll 0 0 #ec008c;
+}
+.brown {
+    background: none repeat scroll 0 0 #c69c6d;
+}
+.gray {
+    background: none repeat scroll 0 0 #555555;
+}
+.golden {
+    background: none repeat scroll 0 0 #daa520;
+}
+.teal {
+    background: none repeat scroll 0 0 #008080;
+}
+.bg1 {
+    background-image: url("../img/patterns/whitey.png");
+}
+.bg2 {
+    background-image: url("../img/patterns/retina_wood.png");
+}
+.bg3 {
+    background-image: url("../img/patterns/subtle_grunge.png");
+}
+.bg4 {
+    background-image: url("../img/patterns/denim.png");
+}
+.bg5 {
+    background-image: url("../img/patterns/lghtmesh.png");
+}
+.bg6 {
+    background-image: url("../img/patterns/fabrics_gray.png");
+}
+.bg7 {
+    background-image: url("../img/patterns/tileable_wood.png");
+}
+.bg8 {
+    background-image: url("../img/patterns/dark_wood.png");
+}
+.bg9 {
+    background-image: url("../img/patterns/wall.png");
+}
+.bg10 {
+    background-image: url("../img/patterns/grey_wash.png");
+}
+@media only screen and (max-width: 1023px) {
+#style-switcher {
+    display: none;
+}
+}

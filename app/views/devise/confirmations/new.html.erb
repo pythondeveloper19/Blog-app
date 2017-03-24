@@ -1,0 +1,19 @@
+<div class="box page-header">
+  <h2>Resend confirmation instructions <small></small></h2>
+</div>
+<div class="box">
+<%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
+  <%#= devise_error_messages! %>
+  <%resource.errors.full_messages.each do |error_msg| %>
+     <div class="alert alert-danger"><%= error_msg%><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>
+  <%end%>
+
+  <div class="form-group">
+		<!--<div><%#= f.label :email %><br />-->
+		<label for="exampleInputEmail1">Email address</label>
+    <%= f.email_field :email, :autofocus => true, :style =>"height:34px;width:500px;" ,:class => "form-control" ,:placeholder => "Enter email" %>
+  </div>
+  <div><%= f.submit "Resend confirmation instructions", :class=>"btn btn-default"%></div>
+<% end %>
+<%= render "devise/shared/links" %>
+</div>
